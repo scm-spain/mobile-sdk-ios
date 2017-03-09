@@ -44,26 +44,7 @@
 }
 
 - (void)requestAccessFromUserForCalendarAccess {
-    __weak ANMRAIDCalendarManager *weakSelf = self;
-    [self.eventStore requestAccessToEntityType:EKEntityTypeEvent
-                                    completion:^(BOOL granted, NSError *error) {
-                                        dispatch_async(dispatch_get_main_queue(), ^{
-                                            ANMRAIDCalendarManager *strongSelf = weakSelf;
-                                            if (granted) {
-                                                [strongSelf setupCalendarUI];
-                                            } else if (error) {
-                                                ANLogError(@"MRAID creative requested calendar access, received error: %@", error);
-                                            } else {
-                                                ANLogError(@"MRAID creative requested calendar access, but access was denied.");
-                                            }
-                                            
-                                            if (!granted) {
-                                                if ([strongSelf.delegate respondsToSelector:@selector(calendarManager:calendarEditFailedWithErrorString:)]) {
-                                                    [strongSelf.delegate calendarManager:strongSelf calendarEditFailedWithErrorString:@"User did not grant access to calendar"];
-                                                }
-                                            }
-                                        });
-                                    }];
+     [self.delegate calendarManager:self calendarEditFailedWithErrorString:@"User did not grant access to calendar"];
 }
 
 - (void)setupCalendarUI {
